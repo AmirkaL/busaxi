@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Map with Custom 3D Model and Interactive Points</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.css" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <!-- Подключаем Telegram Web App JS для управления кнопкой -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body { margin: 0; padding: 0; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+
+    .mapboxgl-popup-content {
+      background: #f8f1e9;
+      border-radius: 8px;
+      padding: 15px;
+      font-family: Arial, sans-serif;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      max-width: 300px;
+    }
+    .mapboxgl-popup-close-button {
+      font-size: 16px;
+      color: #333;
+    }
+    .popup-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #2c4a6b;
+    }
+    .popup-description {
+      font-size: 14px;
+      color: #333;
+    }
+    .custom-marker {
+      position: relative;
+      background-color: #ff4500; /* Яркий оранжево-красный цвет */
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 3px solid #ffffff;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+      z-index: 1; /* Ensure marker is above other elements */
+    }
+    .custom-marker::before,
+    .custom-marker::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      background: rgba(255, 69, 0, 0.5); /* Slightly more opaque for visibility */
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 0; /* Behind the marker */
+    }
+    .custom-marker::before {
+      animation: pulse 2s ease-out infinite;
+    }
+    .custom-marker::after {
+      animation: pulse 2s ease-out 0.5s infinite; /* Delayed for overlapping effect */
+    }
+    @keyframes pulse {
+      0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.7;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0.3;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(3);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+
+  const tg = window.Telegram.WebApp;
+
+  mapboxgl.accessToken = 'pk.eyJ1IjoiYW1pcmxhdCIsImEiOiJjbTh6c3cxdDgwY3pwMmtzOHk3dWwzYXBvIn0.MArJlomeYbUywCOhS5hdhQ';
+  const map = new mapboxgl.Map({
+    container: 'map',
+    center: [66.9754401602312, 39.65612487760183],
+    zoom: 25,
+    pitch: 77,
+    bearing: -10,
+    style: 'mapbox://styles/mapbox/standard',
+    minZoom: 10,
+    maxZoom: 17,
+    antialias: true
+  });
+
+  // Функция для возврата
+  function goBack() {
+    window.history.back();
+  }
+
+  // Когда приложение готово
+  tg.ready();
+
+  // Показываем системную кнопку "Назад"
+  tg.BackButton.show();
+
+  // Назначаем действие на клик по системной кнопке "Назад"
+  tg.BackButton.onClick(goBack);
+
+  // Функция для вычисления центроида полигона
+  function calculateCentroid(coordinates) {
+    let xSum = 0, ySum = 0, pointCount = coordinates.length;
+    for (let i = 0; i < pointCount; i++) {
+      xSum += coordinates[i][0];
+      ySum += coordinates[i][1];
+    }
+    return [xSum / pointCount, ySum / pointCount];
+  }
+
+  map.on('style.load', () => {
+    // GeoJSON для интерактивных точек с высотой
+    map.addSource('points', {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [66.9749, 39.6557, 50] // Медресе Улугбека, высота 50м
+            },
+            properties: {
+              title: 'Медресе Улугбека',
+              description: 'Построено в 1417–1420 годах по приказу Улугбека. Известно как центр астрономических исследований.'
+            }
+          },
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [66.9755, 39.6547, 50] // Медресе Шер-Дор, высота 50м
+            },
+            properties: {
+              title: 'Медресе Шер-Дор',
+              description: 'Построено в 1619–1636 годах. Названо в честь тигров на портале.'
+            }
+          },
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [66.9751, 39.6541, 50] // Медресе Тилля-Кари, высота 50м
+            },
+            properties: {
+              title: 'Медресе Тилля-Кари',
+              description: 'Построено в 1646–1660 годах. Служило мечетью и учебным центром.'
+            }
+          }
+        ]
+      }
+    });
+
+    // Добавление кастомных маркеров вместо слоя circle
+    const points = [
+      {
+        coordinates: [66.97521, 39.65475, 50],
+        title: 'Медресе Улугбека',
+        description: 'Построено в 1417–1420 годах по приказу Улугбека. Известно как центр астрономических исследований.'
+      },
+      {
+        coordinates: [66.9762, 39.6549, 50],
+        title: 'Медресе Шер-Дор',
+        description: 'Построено в 1619–1636 годах. Названо в честь тигров на портале.'
+      },
+      {
+        coordinates: [66.97555, 39.6556, 50],
+        title: 'Медресе Тилля-Кари',
+        description: 'Построено в 1646–1660 годах. Служило мечетью и учебным центром.'
+      }
+    ];
+
+    points.forEach(point => {
+      const el = document.createElement('div');
+      el.className = 'custom-marker';
+
+      new mapboxgl.Marker(el, { anchor: 'center' })
+        .setLngLat(point.coordinates)
+        .setPopup(
+          new mapboxgl.Popup({ offset: 25 })
+            .setHTML(`
+              <div class="popup-title">${point.title}</div>
+              <div class="popup-description">${point.description}</div>
+            `)
+        )
+        .addTo(map);
+    });
+
+    // Добавляем GeoJSON-источник для полигона, который скрывает 3D-здания
+    map.addSource('eraser', {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: [{
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Polygon',
+            coordinates: [[
+              [66.974582, 39.653955],
+              [66.977543, 39.654419],
+              [66.977093, 39.656231],
+              [66.974904, 39.655924],
+              [66.973965, 39.655783],
+              [66.974089, 39.655414],
+              [66.974217, 39.655112],
+              [66.974582, 39.653955]
+            ]]
+          }
+        }]
+      }
+    });
+
+    // Добавляем слой clip для удаления 3D-зданий и символов в полигоне
+    map.addLayer({
+      id: 'eraser',
+      type: 'clip',
+      source: 'eraser',
+      layout: {
+        'clip-layer-types': ['symbol', 'model'],
+        'clip-layer-scope': ['basemap']
+      }
+    });
+
+    // Вычисляем центроид полигона для размещения 3D-модели
+    const polygonCoordinates = [
+      [66.974582, 39.653955],
+      [66.977543, 39.654419],
+      [66.977093, 39.656231],
+      [66.974904, 39.655924],
+      [66.973965, 39.655783],
+      [66.974089, 39.655414],
+      [66.974217, 39.655112],
+      [66.974582, 39.653955]
+    ];
+    const centroid = calculateCentroid(polygonCoordinates);
+    console.log('Центроид полигона:', centroid);
+
+    const modelOrigin = [66.9758, 39.6550];
+    const modelAltitude = 0;
+    const modelRotate = [Math.PI / 2, 6.49, 0];
+    const modelScale = 7;
+
+    const modelAsMercatorCoordinate = mapboxgl.MercatorCoordinate.fromLngLat(
+      modelOrigin,
+      modelAltitude
+    );
+
+    const modelTransform = {
+      translateX: modelAsMercatorCoordinate.x,
+      translateY: modelAsMercatorCoordinate.y,
+      translateZ: modelAsMercatorCoordinate.z,
+      rotateX: modelRotate[0],
+      rotateY: modelRotate[1],
+      rotateZ: modelRotate[2],
+      scale: modelAsMercatorCoordinate.meterInMercatorCoordinateUnits() * modelScale
+    };
+
+    console.log('Масштаб модели:', modelTransform.scale);
+
+    const customLayer = {
+      id: 'registan-model-layer',
+      type: 'custom',
+      renderingMode: '3d',
+      onAdd: function (map, gl) {
+        this.camera = new THREE.Camera();
+        this.scene = new THREE.Scene();
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(0, -1, 1).normalize();
+        this.scene.add(directionalLight);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        this.scene.add(ambientLight);
+
+        this.loader = new THREE.GLTFLoader();
+        this.loader.load(
+          '/static/registan.glb',
+          (gltf) => {
+            this.model = gltf.scene;
+            this.model.scale.set(1, 1, 1);
+            this.model.rotation.set(0, 0, 0);
+            this.scene.add(this.model);
+            console.log('Модель успешно загружена');
+          },
+          undefined,
+          (error) => {
+            console.error('Ошибка загрузки GLTF:', error);
+          }
+        );
+
+        this.map = map;
+        this.renderer = new THREE.WebGLRenderer({
+          canvas: map.getCanvas(),
+          context: gl,
+          antialias: true
+        });
+        this.renderer.autoClear = false;
+      },
+      render: function (gl, matrix) {
+        const rotationX = new THREE.Matrix4().makeRotationAxis(
+          new THREE.Vector3(1, 0, 0),
+          modelTransform.rotateX
+        );
+        const rotationY = new THREE.Matrix4().makeRotationAxis(
+          new THREE.Vector3(0, 1, 0),
+          modelTransform.rotateY
+        );
+        const rotationZ = new THREE.Matrix4().makeRotationAxis(
+          new THREE.Vector3(0, 0, 1),
+          modelTransform.rotateZ
+        );
+
+        const m = new THREE.Matrix4().fromArray(matrix);
+        const l = new THREE.Matrix4()
+          .makeTranslation(
+            modelTransform.translateX,
+            modelTransform.translateY,
+            modelTransform.translateZ
+          )
+          .scale(
+            new THREE.Vector3(
+              modelTransform.scale,
+              -modelTransform.scale,
+              modelTransform.scale
+            )
+          )
+          .multiply(rotationX)
+          .multiply(rotationY)
+          .multiply(rotationZ);
+
+        this.camera.projectionMatrix = m.multiply(l);
+        this.renderer.resetState();
+        this.renderer.render(this.scene, this.camera);
+        this.map.triggerRepaint();
+      }
+    };
+
+    try {
+      map.addLayer(customLayer);
+      console.log('Кастомный слой добавлен');
+    } catch (error) {
+      console.error('Ошибка добавления кастомного слоя:', error);
+    }
+  });
+
+  map.on('error', (e) => {
+    console.error('Ошибка карты:', e.error);
+  });
+
+</script>
+</body>
+</html>

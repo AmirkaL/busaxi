@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>HeritageVoice</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Sora:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- СТРАНИЦА 1: ГЛАВНАЯ -->
+        <div id="page-home" class="page active">
+            <header class="hero-section">
+                <div class="carousel" id="news-carousel"><div class="carousel-slide skeleton active"></div></div>
+            </header>
+            <main>
+                <section>
+                    <div class="section-header">
+                        <h2 class="section-title" data-lang-key="exhibitions">Выставки</h2>
+                        <a href="#" class="section-more nav-link" data-target="page-all-exhibitions" data-lang-key="more">ЕЩЁ</a>
+                    </div>
+                    <div class="horizontal-scroll" id="exhibitions-container"><div class="card skeleton"></div><div class="card skeleton"></div><div class="card skeleton"></div></div>
+                </section>
+                <section>
+                    <div class="section-header">
+                        <h2 class="section-title" data-lang-key="routes">Маршруты</h2>
+                        <a href="#" class="section-more nav-link" data-target="page-all-routes" data-lang-key="more">ЕЩЁ</a>
+                    </div>
+                    <div class="horizontal-scroll" id="routes-container"><div class="card-wide skeleton"></div><div class="card-wide skeleton"></div></div>
+                </section>
+                <section>
+                    <div class="section-header">
+                        <h2 class="section-title" data-lang-key="museums">Музеи</h2>
+                        <a href="#" class="section-more nav-link" data-target="page-all-museums" data-lang-key="more">ЕЩЁ</a>
+                    </div>
+                    <div class="horizontal-scroll" id="museums-container"><div class="card skeleton"></div><div class="card skeleton"></div><div class="card skeleton"></div></div>
+                </section>
+            </main>
+        </div>
+
+        <!-- СТРАНИЦЫ "ВСЕ..." -->
+        <div id="page-all-exhibitions" class="page">
+            <header class="page-header"><h2 class="section-title" data-lang-key="allExhibitions">Все выставки</h2></header>
+            <main>
+                <!-- **ИСПРАВЛЕНИЕ: ПРАВИЛЬНЫЙ ID КОНТЕЙНЕРА** -->
+                <div class="grid" id="all-exhibitions-grid-container"></div>
+            </main>
+        </div>
+        <div id="page-all-routes" class="page"><main><header class="section-header"><h2 class="section-title" data-lang-key="allRoutes">Все маршруты</h2></header><div class="grid" id="all-routes-grid-container"></div></main></div>
+        <div id="page-all-museums" class="page"><main><header class="section-header"><h2 class="section-title" data-lang-key="allMuseums">Все музеи</h2></header><div class="grid" id="all-museums-grid-container"></div></main></div>
+
+        <!-- СТРАНИЦА КАТАЛОГА -->
+        <div class="page" id="page-catalog">
+            <main>
+                <header class="section-header">
+                    <h2 class="section-title" data-lang-key="catalog">Каталог</h2>
+                </header>
+                <div class="catalog-menu">
+                    <a href="#" class="catalog-menu-item nav-link" data-target="page-cities">
+                        <span class="catalog-title" data-lang-key="filterCities">Города</span>
+                        <svg class="catalog-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="catalog-menu-item nav-link" data-target="page-sights">
+                        <span class="catalog-title" data-lang-key="filterSights">Достопр.</span>
+                        <svg class="catalog-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 21s8-4 8-10V5l-8-4-8 4v6c0 6 8 10 8 10z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="catalog-menu-item nav-link" data-target="page-cuisine">
+                        <span class="catalog-title" data-lang-key="filterCuisine">Кухня</span>
+                        <svg class="catalog-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 3a9 9 0 0 0-9 9c0 4.97 4.03 9 9 9s9-4.03 9-9a9 9 0 0 0-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="catalog-menu-item wip">
+                        <span class="catalog-title" data-lang-key="wipCollections">Коллекции</span>
+                        <svg class="catalog-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 5h16v2H4zm0 6h16v2H4zm0 6h16v2H4z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="catalog-menu-item wip">
+                        <span class="catalog-title" data-lang-key="wipAuthors">Авторы</span>
+                        <svg class="catalog-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-6 2.67-6 6v2h12v-2c0-3.33-2.67-6-6-6z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="catalog-menu-item wip">
+                        <span class="catalog-title" data-lang-key="wipExhibits">Экспонаты</span>
+                        <svg class="catalog-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="catalog-menu-item wip">
+                        <span class="catalog-title" data-lang-key="wipTerms">Термины</span>
+                        <svg class="catalog-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16v16H4zM4 8h16M8 4v16"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="catalog-menu-item wip">
+                        <span class="catalog-title" data-lang-key="articles">Статьи</span>
+                        <svg class="catalog-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h8"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="catalog-menu-item wip">
+                        <span class="catalog-title" data-lang-key="quizzes">Викторины</span>
+                        <svg class="catalog-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 3v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                    </a>
+                </div>
+            </main>
+        </div>
+        <div id="page-cities" class="page"><main><header class="section-header"><h2 class="section-title" data-lang-key="filterCities">Города</h2></header><div class="grid" id="cities-grid-container"></div></main></div>
+        <div id="page-sights" class="page"><main><header class="section-header"><h2 class="section-title" data-lang-key="filterSights">Достопр.</h2></header><div class="grid" id="sights-grid-container"></div></main></div>
+        <div id="page-cuisine" class="page"><main><header class="section-header"><h2 class="section-title" data-lang-key="filterCuisine">Кухня</h2></header><div class="grid" id="cuisine-grid-container"></div></main></div>
+
+        <!-- СТРАНИЦА ДЕТАЛЕЙ ОБЪЕКТА -->
+        <div id="page-details" class="page"><div class="details-container"><div class="skeleton" style="height:100vh;"></div></div></div>
+
+        <!-- *** НОВАЯ СТРАНИЦА: "ПОГРУЖЕНИЕ" *** -->
+        <div id="page-immersion" class="page">
+            <header class="section-header">
+                <h2 class="section-title" data-lang-key="navImmersion">Погружение</h2>
+            </header>
+            <main class="immersion-main">
+                <p class="section-subtitle" data-lang-key="immersionSubtitle">Интерактивные 3D-карты и AR</p>
+                <div class="immersion-grid">
+                    <a href="/map.html" class="immersion-card">
+                        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHCBYWFRgWFhUZGBgaHBwcGBoaHR4aGBoaGRwaHBoaGhgcIS4lHB4rHxoYJjgmKy8xNTU1GiQ7QDs0Py40NTEBDAwMEA8QHhISHz0rJCs7NTY3NDQ0NDQ0NDQ0NDc0NDQ0PTQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NP/AABEIAKkBKwMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAAEBQIDBgEAB//EAEEQAAEDAgQCBwUFBwMEAwAAAAEAAhEDIQQSMUFRYQUicYGRobEGEzLB8BRCctHhI1JigpKy8RUzwhYkU6I0g9L/xAAZAQADAQEBAAAAAAAAAAAAAAAAAQIDBAX/xAApEQACAgIBAwMEAwEBAAAAAAAAAQIRAxIhBDFBEyJRMmFxgSMz8BTB/9oADAMBAAIRAxEAPwAqpA3QD6ZLpRr2zo2EK+g/gYXr7HluB0MJ003KvGCbl1vsoUsMY37Feym6IIPejcTiL3dHNM2VuEoMabXg6FNGYQka3+SG+yFrk9xOBzpGiDEAX+aXf6YHvjdNa9IutNkXg2HRwFt909ydDOYnowNsgamBtK2HSYaesOCVnCEw4XG86JqZLgZp1EixVLmkJviuj36j/CGbg3EGxJGye4agbJXZVr6BFjYqvIjcWhKF4tXWsKvbRMaJ7i0BxTXnUijaeHPJTyAWIT3FoLThyvCmmJ8lW8I3FoBZFU9iJdTleFJG41ACc1QLTwTRtMKL2t7SjcegocwlVmmj64CGLUrRSTBy1cyoptEnQcuAnhJUDTNzFgATHAmPUhQ5wTqzXSVXRUGLopqTQpSFSlF9iNWRIVbgpPeqnOT2Q1Fnl0KGcLnvAlaHqywhcUS8LnvAi0PVli4o+8C9nCLQas+0/Zmbx80O6i0GB5ottZp0UX1RwBXDsdepVRpcYV5pAi8IZ1Y8FWcS6LC/L9UbE6Fz2ho/JK8Tj4MAKyqXu/eHgh6mGcTpfinuLQHdXfMwicNinAwl9Rjmm5uonGEETsq2DUdHrkgz2KIaQIiwQFPpUDTzUT0sCbyjYWpbVeBcaoQ4ggnSDyUn4wHZVGo3dPcWhKsWnVspY/D8AUyY5oOqMlhGyNxaCRmGKIFM8E5pYdhC7WwVvyRuLQT+7/ihdDCTrPYjmYCTEEjmjqXRsGxHjCNw0Fb8NA0uh6lAgTlJ+S1FNgF3ADzJSrpHEguygT6d6Nw0M65h4KBEJs/MdLc7eCFr0wLXJT3DQXPlUuKMfSKtwfR89Z1m7cSdoWeTqI41bNcXTyySpCl7DBcdLX7dFQb7/JPOlW5aURE7cIc2PI+JSOmNPr5rnx9XKdtLg6MvSRg1G+QzAseSGsBzbWkkEw4C42c+b7jgEtxeHe05XNOgHaLeNzqtB7P5jVAa4gtY4tE6TGk6c+xLukngP6zXOi0kmf0UJ3kb73zwOUf414rjkX02RcqeVWkAgFoIHMyvZF3RlSo49bKCxQNNFFqjlVbBQKaKh7lGZV40uSW4UDe5UTSCMFMrvuUtx6gjaYXvdIs0V73SNg1PtGRnBRLGcAh3Vp2lDVqhH3Vw7HXqE1KbdlANaNkorYl+wjuVb8U+PyT2DUa1agHwkHkl9bHvuPhQD6rufihyJ3PijYWpdVxeYc+aBe5GNps3J7lB2HGxlPcWoESqXtR7mDdcNMI3FqLusF0PRzqYUfdBPcWoHmU2VI3Vz6SrNNG4al9HFubomFDpQ7pQGK5jEbhoaVvSLctzClTrsJ+K6zrmk7ovDM0gSeaNw0NE4t1cgMaxnIdguUFinu+HNHYoNadSUbhoRxFPNEOAA24fmV4UmNHHy8SrPtLBAgk8rqFR2Y9VoEWJ1De0/edy29csvUKC+5rh6eU39vkH90HOktk7NHq7gPrkixSiCTJlsxoOsLAcOe6lQpCJkhp1d953Zx9B5K5zerLGfu2FyYeDM7m2q8nJ1G0uXyexi6fSPC4E3tOzqcoMDlmp7d6y1MafXyWu9p2OyS4AHK4wNutSgE8bTPNZJje36K7unlcTg6mPvG3ss+MTI/cdfubqg+k6HXJJJ9Eb7Mf/ACRv1H9mg8lT0rmD3WHr6p7NZeH4I1Txc/JRRoCOF1JwaDF9JnwUWVCGG1x6RqfBV5TqTB6tzoC4OcBysAF6GO3Hk87JKMHSRNwHBcjkvUK4NnW4Hbv4Iw4VOTce44yjJWgRoXSCixhlIYZTuXqA+6KkKaNGHUxh0tx6gBpqPukxNBe+zhG4an01zW8UNWOwaT9cVfUe3jCHfUGy49jq1AMTh3nZoHM3SuthnDfwKZYqqZ18EA8neUbBqCFsa+akC07IljArPsoOyNg1A/dt43XNET9khdOERsGoIXDcBUFoRtXCEKj3J4I2CijKvZUSKa6aSewtQTKue7RWQqTKKNg1BW0VIUEwZQbGt1aMGTF4CNg1FjKHNXBkbq6pQLTooAHgnsLUqKi8LuKrtYJeNZjnAkx3JeOnKJMEOG2gPoUKdg40HNFidpAJ3gnQRoI9UXlAgEDkwaD8Ueg7ydFUWdR1iLg8tY170TSYNteP5cF5OdylJpPy+T2MGsYpteFwTDJu89w+rBWPqQJ0ALRaJAJg67xK7TZaVLGkEPI5FZKEYcefnyaOcpcvt8eBP7TMinEQchm+pLqcmTcm2/BYxhtrGt+/mt17Ut6ht9x3q3buKwYf1e8639F6PTv2fs8zqV7/ANDX2Yf/AN0wWux4jh1SV3pVpzvvImyF9mKn/d0v/s/seSj+mB1ydpPirv8AlX4If9b/ACLshdDdnPYD3n/CpxFUu94bxnB10+KLdlkdghL2EwOuyZ/EEpztirf7zYv+IL0MU0uDzM0G3ZJ2pHePn5I/ozHZSGOPVOh/dn5bJaHiW31ga/wqTIPg7/1ut21JcnNHaLtGtbSUvcqfR1MupsJO3oY+SOZhVxt06PTjUkmANpBdNMJi6kAoCmix6gIpqWTkmApgKMBLYNTXvLjYNB7UFiKFQmwa0easp1iTEQiJO649jq1EdbCOFyZHFC5E+rsBFkufhXSbFLYNQEuhdzqbqKrNIo3CjxeFxtXgue7U2sRuGpNtQuUHOlWMYp+6nknsLUFLVz3aY0sGXcArPsR2unsLUVe6Um0k3Z0eN/BSbgxxT2ChY2iUbSw4LYgg8dPJGHDsbqbKDnsGklOxUROHERJ77qo4AHQRzVoxO2Uq19QwEWFCbpXowGm7PLgLxosR0NQYcSwRID577x5wvomPqE037W+tV876NcG4lhn77d9bojL3NfYco+1NfJscW27xGhZHef0VucNbm2a2XcbTP5L2JHWqR/B6lKvaivkoZRYvIaOwXPmR4LzZNubS+T0o0oK/gv6A6YGJDhYPYdBo5s2ICPxJHu3m/wALj4Svm/ROLNCq2o3Y35t3C+lOZnY4MvnYS3nmaY+SM0VF8BilsAe0oPuzPA+tjPcvnx+HvNtBvqvontAD7oyIsQL3+F2vbfwXz5rZHef8DddXTS/jv7nJ1Ef5P0W+z3/zKPa8f+j7dyb9LjrncSe9KehGxi8Pr8ThvvTdrzTfpb4jy1Wqd5F+P/TGSqDX3F2rTGog94IPySGsHhzwRGcybcNI5XWhwovFogyqMSASYbOgE8BbTYQAPFdSklLk5tW1wI2MdLeSOpUnN0E/H3ZhlFkXSH8DT3A/JN8FTabObA4gD5XVymkjJQbY76HafcsJEEgmORJI8oR4lcrnJkAHxODewZSfkrS1YbHSo8FZCiWK0hcLU9h6lDioIjIvZEbBqarq8FwuaoyVxz+S4djq1Mpj/amoyo9gYwta4gG8kDSb6oZnta8gSxruNyJ7tkn6dbNeqf4z/chKYsf0jTsWyinGzJyalRom+01r0RPaR5RZVj2jten5x5Qs46xi5MTYi+vJcqPymC106bXjhInVWsLfYzedI0jfaAb09z96P+Kkz2gG9M/1bf0rM06oIcQHdUSdNPzsofahpDrxwPA/kn6En2D/AKIGqb7RN/cOp32kxtyVlP2lZ95jtdj4LKh8bOFp27ONjPFXubYwTPOOf5KXi17lxyqXY1dL2totmab9ToRptrvEJ90bWFam2owFrXTAOtiRt2L5eGxNosR32X0z2YMYal2H+5yiSUSovYYsoRvKmKY4KyVwvUbFalb2ch3qn7ONSfJFEqtzgnuLUCqwDqVU97joLeCLflVbnBLYeosxYOR/YdV87LstZp0h49RuvpmPj3b/AMJ9F8v6QMP/AJrcrq8TuT/BM17V+T6FUEvffZnqVkvbKsc7GTOVotzdf0PktiHkkxpDCf5gN18/9pKuau6R8OVvgL/XJckFeVnbJ1jX6FLyF9A9msYX4ZpJgtY9p4jLMX7C1YB4F99VrPZB/wCwqjgX+bWj5K+oj7LIwv3UOunyDSiwsSR2teYMaxx1WDwzJMc+Vr68+K23S56hHIm2t2Oi6xmBec0DUGQJict7A69gvsnhv0nRGavVRd0cA3FUN+sY0637Nwm3b5I/pcQ4gcXR4nVV4DAVX16dRzQ0NdJDiZILSOq2OzXirel7OI5u7dVrjknJc+OTLLFqLteRfg7O+u5erOub+ShhbO8Z7UFnBOs34fquqXdM5odmgylUv9ePqnWBfIG6zjHM4HXn+aMoYxrTYX7J8VEmn4ZcVXlG+xzLUvxs/tKvNNYf/W3ue17nucA4ODLgAAyBA5CJhbXojF+/p58uWSRAM6RvA4qGy1GyeRcLEb7oL3uBsUrHqBe7XPdo77OV33PJPYNQ97VUWr2AxzarSWyCIkHnpB3H1ARLVwOVOjqo+WdMMzVqk/vu9UPRaG8+I0nv2RHSh/bVDqM7rW4ndU0dOUaW4N3XoRftRxy+pgtWuWPBiery4ny3UMdUDjJ7o1jUHlreV3GwDmI2Ed0mewT6Jd9ozE879q3lNRpxXNHNHG5tpulZY6qRo0AHiJt2lW0S1xB0POSJ43Ovb5If7QBaPoqt1QDT9VnHNkvk1lgx1xwN8ViJblIvHDSSdSdDEaIt4kG8TPoePqlGHrB4g66fX1qnT5gxxOvfzTnSSonGns7A3MA0tYjutzX0f2dn7NT7D/c5fOXsN4ERIv3T3r6P0A6MNT/Cf7iubqJcI6sMRqCvF6oNRRL1x7nRoWvfxVLn8lEvXMyPUDQ6SvGF4FZD23xlRpaxji1kBxiQXGTF+AhbYV6kkroyzP04t1f4NTjx+zef4Hei+WdKDrnkb+K+gdBYp9XBPdUu4Ne3Nu4BsgnneO5YPpEA1A07uMHX/K3gtZNPwQ3tGLXFm96NfmYDxZR+YXzvpN4NZ5P7x17IW/6EZlpNBMkNYJiJ6zttl8+6UH7R/N59Aufp6c5HRmtQSF5cBxK1vseP2VaL6/2hZV8gfKFq/YyTTqjiR5ha9Uv42R0z/kQ26QdLHDkT3ZHnwWH6OeRXaf4iPHn9aLbdJU8rCCRMOsDEHI/fZYbAf7ov95LBTg/94Fm/sRvGPbIgR1gDxvMefok3TLesZmSXDz4I7Dgy2dnCf6rW7kH0yZc7tdbhc+azwrWaRp1LuHIlpg5o+iqabmSZYJkj0Hdf1RFA9fl6/UoQ3ceRML0kzzF5PGmJsBHdbsV9RlMAZQTrt2cu1UUqgcJ9eXFTrO9T8lMuFwVFW6Z6sGgNy679kyD4WTrof2gqUaYYyMsnUNN7TeeSUufIGmguNd1ZRdlk3PV11OrfFS6aVlq4t0aB3tZVI+6OYEHycun2vq/wDmGj81n8/wB7bhz4x9cucWVDreAL/n9f5WiH6jHtP2qrCSH6mTLWawBa1tFP/q6v++3+liQOf977vCb+H1+YTsSJ/X9U1BMh5GvBqugPaAYcvdke73mUkF4gFojq20KcH26a2T7g2/jH5LEVQYtw+j5INgdld1i4XBJF7LKWKEpWzdZJJUh3jn5nvdsXZo7RN/rZRoWBv3eHNVVXXPdI30vN9LeSsoyR5+l77K+ySM6t2KelapmOTQOyJ9UC15nu4pnjpkx/D6DZUMpXPWzNy8IINpBHoqckJRdcAmU8PMLjyQNN+IXX1DMR2xtHr9aqx7ZANr77RxTtIKbPYZ5DpHqtI8y3WDf56cFnKESYv5HRPwTltG/o48UpPjgIr3clRtudNz+uq0OE9rBTY2n7qcgjNnib8Iss28kctjPHca6oDHEy4gxx49yiUYy4kXGTj2NdjfaNtRzHGm8e7dmGWplDiNndW4RR9sB/4v8A3/RY/DtOU5uYnwg9qrZnLyZO0jaDOnOyzeLHXY0WSdmz/wCrx/4T/X+i7/1g2f8AZd/UO/ZYzFsMSCRa53tw4LuHYQOsSdb8dLp/8+L4F6uQ2jPbNg1pO/qH5JdjemqOIqse9jgxti0XJEOOojci3JZdjn57m1gWxaDOnPmrqZ1HZfuKqOCCfHH7Jllk1yfRfZx4OBqloIH7WJ/DPzWD6R/3R+ITyutt7J1AcDWbNx7yRuA5gj0PgsV0m3rj8Qg8b381KjUmW3cUbHAYsZWWvDZO0ZjHzWC6SP7V5/j+QWvwBOQWPwjs+IrF9Imajz/H8gsunilORrnbcUVOd4/Wy03sc/qVO0f2lZkeXBaX2OiKg7PQqup/rZPT/wBiGfSI6hPFt7b5X7d6xODP7Rv4vq+63nSDv2dyCMun8pWGwoHvRP731ql0/wBDDqP7DXYUjqccwnx6vlN0N0swuJOkF08SJt9c0XQrsL8oIzAjNpYOuNuSH6ScHSR+9BHh+ajH9ZWa9BIwdaPA/wCEE9vWcOflBRucZgN9vr5oWuOudtPQX+a74s4KOsYBEDXZTb/nX64KDGwLfqp5ZsNdj2cfr8k2xJM6N99Yna6tYQDJNov439FQHngQeB37eSvo6gHhfxPeobLiu9nbEg7AQf1B2mbn81yRId90a9v1P1KsMSNI+9w5fQQuOpl2XJFtb/Xkhcsl8FrwDDtgL/4+aFq1mydPA/kmAAJbGn3uHIf4QFZozGw8vzTUiZRVIIfVhphskgfO/ogsM54Y4PaRJtvaVbjKpYG2uRHfzVOGrOfZw8NLaqdV3N9rdDKcxN4E8wbA2PKyucwhpvvuSSJiwnZDspnMZ0naZvmRObuueM6qX3GkLak9YgTGW3KGz5L2AaTMxe9ttYB52CsqQKdQz95noFb0flLiQMpy3G08Qs8k6vg0hG0hW6Q4DLY5s3Hl2K51LqN22vtpryQWJrEPI4cte9OMQAaDCeMnjpotJOkvuRD3N/YAwwMG0QB43n1Ttkxbn80iw9QRUiLDQbX/AETym61j2+BTf0iS936I1mETcmx+XPVLsQXEOyDrTae5H4yoSLHiPq+qX4qWiRaZ9U12E7sJpVDlAIuJ+X5Kmm9+ckgRaBI71PDAuY8na3f9eiBpOcXeFu3eeKmo0O5WH4wvykMFyLG2uynSeS2IuJnhFkP0o8tgDWLnhHbvdW4OkcrjuAZ58xz1TdVYLa6KqJcHy4dWR2gbrswTPL0KDw9cl0mYtbhOkFMsTTDdxtyVWlIVXEqwvSr6VUMa5wY9oY9oi4JMa80Xi3A1WiHXI1sLBI3tzYikBcksA/rWkxfR7xVYYbdw+8JuOAKWSPN/YMUuKfyOcHYfyj1OyyOPHXf+PX+lbSng3gZsrjYCwkG+xWVr4B5q1AB988r2tchc2J6ttnVl5SSFxZ9eq0fsc21T+X/kkpwVQSCP7f8A9LReytLI15JADiAO0C/r5Kc804NJjwRe6Yb0h/t3EdXt+46beCxOGP7Qfj7eC2PSIysILmkC1raMdzWRptGcR++fUKun4gZ5+cg06OcRin2n4bfzN8Ed0lWM2Y2M1+tznYcUJ0W3/u376Sf5m3THpVjS4xaZPf2Jx+tfgc/of5Erg/MBAnxQmNaWv60fCI4ETHyKPcQHDv8AMIfpEtzsMfdO86E8l0xfKOVpc0VsItqiqJ6x+uKFc9oYSNQCey0wqui8Q57Ad9D3b+cqZrZOgxtRasJxDutG0flooYcyQDwM+cyoVpOyjTdeNwD6OTjGog5e5sIqkNI2kme+VwkCALA6/rw28uSUdNOgNAJ1LvCw+fmrsbVik0icr2weIMaz4+KpRM3LkPo4phcWNMRZ3Ag8DzH1oo1sMyTY9/8AhZylrvMGI3gaeErtTHOJOviU9RbGr6YwzDkyvLusSQGxHDe458lT0dhgabXmQ7PlylpDYJ1nsRzabzB1BA3+a83Cv027StvRjSVkerO26GGGpsBk02OBO0QdRfjqfFX4j3W9JjTqQYnsvoEn+xP3PmVQcM5+bK4Oc05XG8g6kFauONuzJeqlRDpjrMcykxpDnBzi2LZYtM6qp1Z7MrmscHEEP6ogy45YGvwwim4F4e12cCPujfxKP+0ZTlINgHa2gkgRxusMmKEnxybwnOKpmbx+Ge+rmDIBDTwu1rQZAsN0zeC5wD6TiyXWbAImYnvhOW1HfuroqOP3PP8ARQ8aaSfjguMpRba88me6GDZe4s6r3PzfeEZepmbfLBJ2/R3hsYxvxMbrEnLBnTbsUMTWLA3qgZnBs83aW7UN/pryS4uBkzpyW0YwSaZlP1JNNDHF4pshhYxpvMRMiZ200SfpEZ2PyWcHDLoNcpJv3ov7A7iFF3R7tvJElCSS+BRWRNsjRLAyzSTPXknUCDAFzvpKowtNgqkvuzq5IJkEDrEjXXiim4J2ikOjzsSs/SxVVs1Us3whd0vSz5fdwD1gZJO4IM6bHxRrajAMrWEu36xuSABEnt8kS/o9jAC7ENZOg623Y1UihSADxiA64Ng7S+2W9480OGJru+AUsyfgCwHRT2ucX0yWdXLGY5YidBeUU8fsy1wY18zLheDtLgDx/wAJxhelabQJqA9jH+dk0pdLU3NJEkwYEGTAmACoqO1lpOqsx2C6Fc6rTcQ0w8Q6R9wgus3gnmJwhD2ui2aSQCYAGs6BEs6PqVXh7mMosBDm5R+0J5uGibvDGAZrDSSeAJknxupk+S4x4/yKqGYBxL8wMZRpBgayO9ZDEPdSqve4ODDJB42udLiyf4jFtqPFOg8B5BOdzcwgbN08eSp6X6LqvdZrHMDXADMQTnbBkGxvCz9OuGuGXumrT7Gbo4oPqFjpmAXFrZIa7cCPqVqPZPFPpte1zSOsJtFwOY5wltTAPbVe8U3DO1jAcoflguE2OhAaewqWAxDg9mZ7hLm5muYQQ57XZYOly2IhHpxY1OSNZ0jiqbmyWC8m7W/unvWU/wBQYx4/YEkukAMEuGlhElMq/SDHXDmwWZpdDYa/M0WItf0SqphHl4e3IMroIzSZsYEiyvHFVyjPLJ3wUYXpd7K9ZzsGSx5uwUyH07zY5deM+SLx+Lo1BmFMseIltRhabzAuL76fNV08a9j6rzDy4EQDInrC5GgttyVHStV73AZZ0sDMAbwFcnFyVJL8Ga2UeW3+SmuxjQHBjYO0C3H5Jd0jUZDC1oBGYWgEyALorEBxsGEbEmY7ydEl6QwzyQ2IIk68QPHdWlxyZu3LgNfWpihUzsfniGEOte1xN4JlJei8WGBwIJGtv4QSZnsRVXDPNNzSA4kgiDBAGszE8Etw9Ih4DhaYdJGhF7zwKcatE5Lo0bYc3MGwDB1E3vxXG05Mtae7fXeUvqYhjBDTO0CdNr+Cnh8ayJdLY2glOUY2+RRyOlwNMP7LvxIL2vayDkyuBJkRNx2o0ex1UMDPe0zYgyHCxIIPKLpr7BOmi/ce9dG2oYfmnmKb1h+H81js0zojBSVmGb7FVmEvz0yGhxIBJtkItPekv+mn/wAn/r+q+mVGdV34Xei+cQrjK+6MskKqmzR4eoQ0A7ADwV32g8FS1TC6dURsy0VDwsh8LSyF5F87855GAI8lc1WBJxQ7YLjKZeQcpkaaxJC8+mXMAMEgDXiHAzO2iMprjtVNUUeBKm2VJmi6pZZAtnxlWAldapJ0SmRvyC8AeSsp/EO0K+tp3pDBC0rhplEFSbopLQC5nELuTkFbitQq2JDRHLyXiCrHKG6Qyyni3t0cezX1VePxDqrMrosQZAuoFU4f734il2Y+6oqweFNOo2oHk5SbWgzrO60Q6YB+JhHZcJK5dRd9wpJcGhp9IUz96O23qrWvYdL3MxfzWZK43XuPokJmhqYOm9t2NIcwDSDE6SNEC/oCk64ztklxh0gl4ynXZG4f4W/hb8kXS+Edg/uVURZnW+z7mZWsq9VrS3K4RJgZTP1qhmdF4huQPYHHKc7w77w0EWmeS1Q17/8AiF5nxO+tmpUUmYrNHu/eU3Ne+R8JgETrNxootxTIeSGtFN2UlxEbQZ4XhbLG6nuWH6Z/28R+Mf8AFIafIW5gI+Fp4cPRL6mBfMtoUz4nyMJnS+Fn4W+gVfSP+0/8DvRSxvkUvw7x8VJg/knzuoe8j7rAfwN+YWkw/wADfwj0QnSmv8p9VlNNeSaG/se+aT9Pj2AA+FvAJrijcdn5pJ7G/wC3U/H/AMWpxitR2fmrhyi49iM69h9F82lfRx9eC+brbH5Mc3g//9k=" alt="Registan Square">
+                        <div class="immersion-card-content">
+                            <h3>Площадь Регистан</h3>
+                            <span>3D Карта</span>
+                        </div>
+                    </a>
+                    <div class="immersion-card wip">
+                        <img src="data:image/jpeg;base64,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" alt="Shahi Zinda">
+                         <div class="immersion-card-content">
+                            <h3>Шахи-Зинда</h3>
+                            <span data-lang-key="wipShort">В разработке</span>
+                        </div>
+                    </div>
+                     <div class="immersion-card wip">
+                        <img src="https://uzbekistan.travel/storage/app/uploads/public/671/74c/365/thumb_3943_600_0_0_0_auto.jpg" alt="Kalyan Minaret">
+                         <div class="immersion-card-content">
+                            <h3>Минарет Калян</h3>
+                             <span data-lang-key="wipShort">В разработке</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- СТРАНИЦА: Я В МУЗЕЕ (Финальный вариант) -->
+        <div id="page-scan" class="page">
+            <header class="scan-page-header">
+                <div class="scan-animation">
+                    <!-- Здесь можно добавить анимацию, например, Lottie -->
+                </div>
+                <h2 class="section-title" data-lang-key="scanHeader">Интерактивный гид</h2>
+                <p class="section-subtitle" data-lang-key="scanSubheader">Распознайте экспонаты с помощью камеры</p>
+                
+                <button class="call-to-action-button" id="scan-action-button">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                        <path d="M20 4h-3.17L15 2H9L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h4.05l1.83-2h4.24l1.83 2H20v12z"/>
+                    </svg>
+                    <span data-lang-key="scanButtonText">Сканировать экспонат</span>
+                </button>
+            </header>
+        </div>
+        
+        <!-- СТРАНИЦА: РЕЗУЛЬТАТ АНАЛИЗА AI -->
+        <div id="page-scan-result" class="page">
+             <header class="section-header">
+                <h2 class="section-title" data-lang-key="scanResultTitle">Результат анализа</h2>
+            </header>
+            <main>
+                <div class="scan-result-container">
+                    <div class="result-image-container">
+                        <img id="result-image" src="" alt="Analyzed exhibit">
+                    </div>
+                    
+                    <div class="result-text-container">
+                        <!-- Скелетон остался прежний -->
+                        <div id="result-text-skeleton" class="skeleton-text">
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line short"></div>
+                        </div>
+                        <!-- Элемент для вывода текста остался прежний, чтобы не ломать ваш JS -->
+                        <p id="result-text"></p>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- СТРАНИЦА ПРОФИЛЯ -->
+        <div id="page-profile" class="page">
+            <main>
+                <header class="profile-header">
+                    <img class="profile-avatar skeleton" src="" alt="Profile avatar">
+                    <h2 class="profile-name"></h2>
+                    <p class="profile-username"></p>
+                    <button class="edit-profile-button call-to-action-button" data-lang-key="editProfile">Редактировать профиль</button>
+                </header>
+
+                <section class="profile-favorites">
+                    <header class="section-header">
+                        <h3 class="section-title" data-lang-key="favorites">Избранное</h3>
+                        <a href="#" class="section-more nav-link" data-target="page-favorites" data-lang-key="details">ПОДРОБНЕЕ</a>
+                    </header>
+                    <div id="favorites-container" class="horizontal-scroll"></div>
+                </section>
+                <section class="profile-stats">
+                    <h3 data-lang-key="stats">Статистика</h3>
+                    <div class="stats-container">
+                        <div class="stat-item">
+                            <span class="stat-number" id="museums-visited">0</span>
+                            <span class="stat-label" data-lang-key="museums">Музеи</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="routes-completed">0</span>
+                            <span class="stat-label" data-lang-key="routes">Маршруты</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="exhibitions-visited">0</span>
+                            <span class="stat-label" data-lang-key="exhibitions">Выставки</span>
+                        </div>
+                    </div>
+                </section>
+                <section class="settings-section">
+                    <div class="language-switcher">
+                        <h3 data-lang-key="language">Язык</h3>
+                        <div class="lang-buttons">
+                            <button class="lang-button" data-lang="ru">
+                                <img src="https://flagcdn.com/24x18/ru.png" alt="Russian flag" class="lang-flag">
+                                <span>RU</span>
+                            </button>
+                            <button class="lang-button" data-lang="uz">
+                                <img src="https://flagcdn.com/24x18/uz.png" alt="Uzbek flag" class="lang-flag">
+                                <span>UZ</span>
+                            </button>
+                            <button class="lang-button" data-lang="en">
+                                <img src="https://flagcdn.com/24x18/gb.png" alt="English flag" class="lang-flag">
+                                <span>EN</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="theme-switcher">
+                        <span class="theme-toggle-label" data-lang-key="themeLabel">Тёмная тема</span>
+                        <label class="theme-toggle">
+                            <input id="theme-toggle-checkbox" type="checkbox">
+                            <span class="theme-slider"></span>
+                        </label>
+                    </div>
+                </section>
+            </main>
+        </div>
+        <div id="page-favorites" class="page">
+            <main>
+                <header>
+                    <h1 data-lang-key="favorites">Избранное</h1>
+                </header>
+                <div id="all-favorites-grid-container" class="grid"></div>
+            </main>
+        </div>
+
+        <div class="content-spacer"></div>
+    </div>
+
+    <!-- НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ -->
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active nav-link" data-target="page-home"><div class="nav-icon"><svg class="nav-icon-filled" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg class="nav-icon-outline" viewBox="0 0 24 24"><path d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.4l6.18 3.73-1.64-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"/></svg></div><span class="nav-label" data-lang-key="navRecommend">Рекомендуем</span></a>
+
+        <a href="#" class="nav-item nav-link" data-target="page-immersion">
+            <div class="nav-icon">
+                <svg class="nav-icon-outline" viewBox="0 0 24 24"><path fill="currentColor" d="M21.66,6.34a2,2,0,0,0-2.32,0L18,7.5V5a2,2,0,0,0-2-2H4A2,2,0,0,0,2,5V15a2,2,0,0,0,2,2h8.5l-1.38,1.38a2.1,2.1,0,0,0,3,3L18,15.5V12.41l1.34,1.34a2,2,0,0,0,2.83,0l2.32-2.32a2,2,0,0,0,0-2.82ZM16,10.5a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,16,10.5Z"/></svg>
+                <svg class="nav-icon-filled" viewBox="0 0 24 24"><path fill="currentColor" d="M21.66,6.34a2,2,0,0,0-2.32,0L18,7.5V5a2,2,0,0,0-2-2H4A2,2,0,0,0,2,5V15a2,2,0,0,0,2,2h8.5l-1.38,1.38a2.1,2.1,0,0,0,3,3L18,15.5V12.41l1.34,1.34a2,2,0,0,0,2.83,0l2.32-2.32A2,2,0,0,0,21.66,6.34ZM16,10.5A1.5,1.5,0,1,1,14.5,9,1.5,1.5,0,0,1,16,10.5Z"/></svg>
+            </div>
+            <span class="nav-label" data-lang-key="navImmersion">Погружение</span>
+        </a>
+
+        <a href="#" class="nav-item nav-link" data-target="page-scan"><div class="nav-icon"><svg class="nav-icon-filled" viewBox="0 0 24 24"><path d="M4 4h6v6H4V4zm8 0h6v6h-6V4zM4 14h6v6H4v-6zm12.5-1.5A2.5 2.5 0 0 0 14 15v4a2.5 2.5 0 0 0 2.5 2.5h4a2.5 2.5 0 0 0 2.5-2.5v-4A2.5 2.5 0 0 0 20.5 12.5h-4z"/></svg><svg class="nav-icon-outline" viewBox="0 0 24 24"><path d="M3 11h8V3H3v8zm2-6h4v4H5V5zM3 21h8v-8H3v8zm2-6h4v4H5v-4zm8-12v8h8V3h-8zm6 6h-4V5h4v4zm-2 4h-4v2h4v-2zm-4 4h4v2h-4v-2zm-2 2H9v-2h2v2zm2-2h2v-2h-2v2zm-4 0v2H7v-2h2zm-2-2H7v-2h2v2zm-2-2H3v-2h2v2zm0 4h2v-2H5v2z"/></svg></div><span class="nav-label" data-lang-key="navInMuseum">Я в музее</span></a>
+        <a href="#" class="nav-item nav-link" data-target="page-catalog"><div class="nav-icon"><svg class="nav-icon-filled" viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"></path></svg><svg class="nav-icon-outline" viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM10 4h4v2h-4V4zm10 16H4V8h16v12z"></path></svg></div><span class="nav-label" data-lang-key="navCatalog">Каталог</span></a>
+        <a href="#" class="nav-item nav-link" data-target="page-profile"><div class="nav-icon"><svg class="nav-icon-filled" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg><svg class="nav-icon-outline" viewBox="0 0 24 24"><path d="M12 5.9c1.16 0 2.1.94 2.1 2.1s-.94 2.1-2.1 2.1S9.9 9.16 9.9 8s.94-2.1 2.1-2.1m0 9c2.97 0 6.1 1.46 6.1 2.1v1.1H5.9V17c0-.64 3.13-2.1 6.1-2.1M12 4C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 9c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z"></path></svg></div><span class="nav-label" data-lang-key="navProfile">Профиль</span></a>
+    </nav>
+    <script src="/static/js/app.js" defer></script>
+</body>
+</html>

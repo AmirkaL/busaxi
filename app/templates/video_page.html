@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }} - BuSaXi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@1,700&family=Sora:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-bg: #F8F5EF;
+            --primary-text: #2c3e50;
+            --accent-blue: #3498db;
+            --button-text: #ffffff;
+            --secondary-text: #7f8c8d;
+            --video-shadow: 0px 10px 30px rgba(44, 62, 80, 0.2);
+            --safe-area-bottom: env(safe-area-inset-bottom, 20px); 
+        }
+        
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        html, body {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: 'Sora', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--primary-text);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        
+        .main-content {
+            flex-grow: 1; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            padding: 20px; box-sizing: border-box;
+            min-height: 0;
+        }
+        
+        .video-title {
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: 32px;
+            text-align: center;
+            margin: 0 0 24px 0;
+            animation: fadeInDown 0.6s ease-out;
+        }
+        
+        .video-wrapper {
+            width: 100%;
+            max-width: 480px;
+            animation: fadeInUp 0.7s ease-out;
+        }
+
+        video {
+            display: block; width: 100%;
+            border-radius: 16px;
+            box-shadow: var(--video-shadow);
+            outline: none;
+            background-color: #000;
+        }
+
+        .footer-content {
+            width: 100%;
+            /* **ИСПРАВЛЕНИЕ 2:** Используем отступы, которые не выходят за рамки */
+            padding: 20px 20px calc(var(--safe-area-bottom)) 20px;
+            box-sizing: border-box;
+            text-align: center;
+            flex-shrink: 0;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .ai-attribution { font-size: 13px; color: var(--secondary-text); margin: 0 0 16px 0; }
+        .ai-attribution span { font-weight: 600; }
+        
+        .cta-button {
+            display: block; width: 100%;
+            /* max-width остается на родительском элементе .video-wrapper */
+            padding: 16px; font-size: 16px; font-weight: 600;
+            color: var(--button-text); background: var(--accent-blue);
+            border: none; border-radius: 12px;
+            text-decoration: none; cursor: pointer;
+            transition: transform 0.2s;
+            box-sizing: border-box;
+        }
+        .cta-button:active { transform: scale(0.97); }
+     .language-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px; /* Расстояние между кнопками */
+            margin-bottom: 24px;
+            animation: fadeInUp 0.75s ease-out; /* Добавляем анимацию */
+        }
+        .lang-switch-button {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid transparent; /* Рамка появится при активации */
+            background-color: rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Расстояние между флагом и текстом */
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            color: var(--secondary-text);
+        }
+        .lang-switch-button.active {
+            border-color: var(--accent-blue);
+            color: var(--primary-text);
+            background-color: #ffffff; /* Белый фон для активной кнопки */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transform: translateY(-2px); /* Небольшой эффект "поднятия" */
+        }
+        .lang-switch-button img {
+            width: 24px;
+            height: 18px; /* Правильные пропорции флага */
+            border-radius: 3px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <h1 class="video-title" id="video-title">{{ title }}</h1>
+        <div class="video-wrapper">
+            <video id="video-player" controls playsinline preload="metadata" src="{{ video_url }}"></video>
+        </div>
+    </div>
+
+    <footer class="footer-content">
+        <!-- Кнопки выбора языка -->
+        <div class="language-selector">
+            <button class="lang-switch-button active" data-lang="ru">
+                <img src="https://flagcdn.com/w40/ru.png" alt="Русский">
+                <span>RU</span>
+            </button>
+            <button class="lang-switch-button" data-lang="uz">
+                <img src="https://flagcdn.com/w40/uz.png" alt="O'zbekcha">
+                <span>UZ</span>
+            </button>
+            <button class="lang-switch-button" data-lang="en">
+                <img src="https://flagcdn.com/w40/gb.png" alt="English">
+                <span>EN</span>
+            </button>
+        </div>
+
+        <p class="ai-attribution">Сделано с помощью <span>ИИ</span></p>
+        
+        <a href="https://t.me/InstaAvatarSavebot" class="cta-button">
+            Больше в BuSaXi
+        </a>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Получаем данные только для Амира Темура
+            const videoData = {
+                'amir_temur': {{ VIDEO_DATABASE.amir_temur | tojson }}
+            };
+            
+            const player = document.getElementById('video-player');
+            const titleElement = document.getElementById('video-title');
+            const langButtons = document.querySelectorAll('.lang-switch-button');
+            
+            // Напрямую берем данные Амира Темура
+            const currentVideo = videoData['amir_temur'];
+            if (!currentVideo) return; 
+
+            const switchLanguage = (lang) => {
+                langButtons.forEach(btn => btn.classList.remove('active'));
+                const activeButton = document.querySelector(`.lang-switch-button[data-lang="${lang}"]`);
+                if (activeButton) activeButton.classList.add('active');
+                
+                const langSpecificData = currentVideo[lang] || currentVideo['ru'];
+                
+                const isPlaying = !player.paused;
+                const currentTime = player.currentTime;
+                
+                titleElement.textContent = langSpecificData.title;
+                player.src = langSpecificData.video_path;
+                
+                // Восстанавливаем состояние плеера
+                player.currentTime = currentTime;
+                if(isPlaying) player.play();
+            };
+            
+            langButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    switchLanguage(button.dataset.lang);
+                });
+            });
+            
+            const browserLang = navigator.language.slice(0, 2);
+            if (['ru', 'uz', 'en'].includes(browserLang)) {
+                switchLanguage(browserLang);
+            }
+        });
+    </script>
+</body>
+</html>
